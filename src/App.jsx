@@ -110,6 +110,41 @@ function App() {
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
 
+  const handleWatchLive = async (show) => {
+    if (!show.externals?.imdb) {
+      alert("Watch link not available for this show.");
+      return;
+    }
+    
+    try {
+      // Use public TMDB key to convert IMDB ID to TMDB ID exactly as Cinejoy expects
+      const res = await fetch(`https://api.themoviedb.org/3/find/${show.externals.imdb}?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&external_source=imdb_id`);
+      const data = await res.json();
+      
+      let tmdbId = null;
+      let type = 'tv';
+
+      if (data.tv_results && data.tv_results.length > 0) {
+        tmdbId = data.tv_results[0].id;
+        type = 'tv';
+      } else if (data.movie_results && data.movie_results.length > 0) {
+        tmdbId = data.movie_results[0].id;
+        type = 'movie';
+      }
+
+      if (tmdbId) {
+        const slug = show.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
+        const cinejoyUrl = `https://cinejoy.pro/${type}/${tmdbId}/${slug}`;
+        window.open(cinejoyUrl, '_blank');
+      } else {
+        alert("Watch link not found in database.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to locate live stream.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center">
@@ -182,14 +217,12 @@ function App() {
               </div>
 
               <div className="flex gap-4 pt-4">
-                <a 
-                  href={`https://cinejoy.pro/search/${heroShow.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`}
-                  target="_blank"
-                  rel="noreferrer"
+                <button 
+                  onClick={() => handleWatchLive(heroShow)}
                   className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105 shadow-lg shadow-cyan-500/30"
                 >
                   <PlayCircle size={20} /> Watch on Cinejoy
-                </a>
+                </button>
                 <button 
                   onClick={() => setSelectedShow(heroShow)}
                   className="bg-white/5 border border-white/10 px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-white/10 transition"
@@ -386,14 +419,12 @@ function App() {
               <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary || 'No summary available.' }} />
               
               <div className="flex gap-4">
-                <a 
-                  href={`https://cinejoy.pro/search/${selectedShow.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`} 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <button 
+                  onClick={() => handleWatchLive(selectedShow)} 
                   className="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1 flex justify-center items-center gap-2 shadow-lg shadow-cyan-500/20"
                 >
                   <PlayCircle size={18} /> Watch Live (Cinejoy)
-                </a>
+                </button>
                 {selectedShow.officialSite && (
                   <a href={selectedShow.officialSite} target="_blank" rel="noreferrer" className="bg-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/20 transition text-center flex-1">
                     Official Site
