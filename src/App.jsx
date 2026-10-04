@@ -134,7 +134,8 @@ function App() {
 
       if (tmdbId) {
         const slug = show.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
-        const cinejoyUrl = `https://cinejoy.pro/${type}/${tmdbId}/${slug}`;
+        // Cinejoy routes everything through /movie/ and requires /watch at the end
+        const cinejoyUrl = `https://cinejoy.pro/movie/${tmdbId}/${slug}/watch`;
         window.open(cinejoyUrl, '_blank');
       } else {
         alert("Watch link not found in database.");
