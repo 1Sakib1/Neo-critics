@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X, Award, Tv, ChevronRight } from 'lucide-react'
 import './App.css'
 
@@ -7,6 +7,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedShow, setSelectedShow] = useState(null)
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0)
 
   useEffect(() => {
     fetch('https://api.tvmaze.com/shows')
@@ -24,6 +25,17 @@ function App() {
       });
   }, [])
 
+  // Auto-rotate Hero
+  useEffect(() => {
+    if (shows.length === 0 || searchQuery) return;
+    
+    const timer = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % 5); // Rotate through top 5
+    }, 7000);
+    
+    return () => clearInterval(timer);
+  }, [shows.length, searchQuery]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center">
@@ -38,10 +50,12 @@ function App() {
     (show.genres && show.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
-  const heroShow = shows[0];
-  const top10Shows = shows.slice(1, 11); // For the Top 10 Slideshow
-  const marqueeShows = shows.slice(11, 30); // For scrolling titles
-  const topRatedShows = shows.slice(30, 34); // For the critically acclaimed grid
+  const heroShows = shows.slice(0, 5);
+  const heroShow = heroShows[currentHeroIndex];
+  
+  const top10Shows = shows.slice(1, 11);
+  const marqueeShows = shows.slice(11, 30);
+  const topRatedShows = shows.slice(30, 34);
   const gridShows = searchQuery ? filteredShows : shows.slice(34, 54);
 
   return (
@@ -70,56 +84,71 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section (Now a Carousel) */}
       {!searchQuery && heroShow && (
-        <main className="pt-32 px-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 space-y-6 z-10">
-            <div className="inline-block px-4 py-1 rounded-full border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest">
-              #1 TRENDING LIVE
-            </div>
-            <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight">
-              {heroShow.name.toUpperCase()}
-            </h1>
-            
-            <div 
-              className="text-gray-400 text-lg leading-relaxed max-w-lg line-clamp-3" 
-              dangerouslySetInnerHTML={{ __html: heroShow.summary }} 
-            />
-            
-            <div className="flex items-center gap-4 text-sm font-bold text-gray-300">
-              <span className="flex items-center gap-1 text-yellow-500">
-                <Star size={18} fill="currentColor" /> {heroShow.rating.average} / 10
-              </span>
-              <span>|</span>
-              <span>{heroShow.genres.join(' • ')}</span>
-              <span>|</span>
-              <span>{heroShow.premiered?.substring(0,4)}</span>
-            </div>
+        <main className="relative pt-32 px-6 max-w-7xl mx-auto flex flex-col items-center min-h-[80vh] md:min-h-[70vh] justify-center">
+          
+          <div key={heroShow.id} className="flex flex-col md:flex-row items-center gap-12 w-full hero-animate">
+            <div className="flex-1 space-y-6 z-10">
+              <div className="inline-block px-4 py-1 rounded-full border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 text-xs font-bold tracking-widest">
+                #{currentHeroIndex + 1} TRENDING LIVE
+              </div>
+              <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-tight">
+                {heroShow.name.toUpperCase()}
+              </h1>
+              
+              <div 
+                className="text-gray-400 text-lg leading-relaxed max-w-lg line-clamp-3" 
+                dangerouslySetInnerHTML={{ __html: heroShow.summary }} 
+              />
+              
+              <div className="flex items-center gap-4 text-sm font-bold text-gray-300">
+                <span className="flex items-center gap-1 text-yellow-500">
+                  <Star size={18} fill="currentColor" /> {heroShow.rating.average} / 10
+                </span>
+                <span>|</span>
+                <span>{heroShow.genres.join(' • ')}</span>
+                <span>|</span>
+                <span>{heroShow.premiered?.substring(0,4)}</span>
+              </div>
 
-            <div className="flex gap-4 pt-4">
-              <button 
-                onClick={() => setSelectedShow(heroShow)}
-                className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105"
-              >
-                <Info size={20} /> View Details
-              </button>
+              <div className="flex gap-4 pt-4">
+                <button 
+                  onClick={() => setSelectedShow(heroShow)}
+                  className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105"
+                >
+                  <Info size={20} /> View Details
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex-1 w-full relative">
+              <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full" />
+              <img 
+                src={heroShow.image.original} 
+                alt={heroShow.name}
+                className="relative z-10 w-full md:w-[70%] ml-auto rounded-2xl border border-white/10 shadow-2xl shadow-black/50 hover:scale-[1.02] transition duration-500 object-cover aspect-[2/3]"
+              />
             </div>
           </div>
-          
-          <div className="flex-1 w-full relative">
-            <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full" />
-            <img 
-              src={heroShow.image.original} 
-              alt={heroShow.name}
-              className="relative z-10 w-full md:w-[70%] ml-auto rounded-2xl border border-white/10 shadow-2xl shadow-black/50 hover:scale-[1.02] transition duration-500 object-cover aspect-[2/3]"
-            />
+
+          {/* Carousel Navigation Dots */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-3">
+            {heroShows.map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setCurrentHeroIndex(idx)}
+                className={"h-2 rounded-full transition-all duration-500 " + (idx === currentHeroIndex ? 'bg-cyan-400 w-8' : 'bg-white/20 w-2 hover:bg-white/50')}
+                aria-label={"Go to featured show " + (idx + 1)}
+              />
+            ))}
           </div>
         </main>
       )}
 
       {/* Top 10 Trending Slideshow (Netflix Style) */}
       {!searchQuery && (
-        <section className="mt-20 pl-6 md:pl-12 lg:pl-0 max-w-7xl mx-auto">
+        <section className="mt-24 pl-6 md:pl-12 lg:pl-0 max-w-7xl mx-auto">
           <div className="flex items-center gap-3 mb-2 px-6 lg:px-0">
             <h2 className="text-2xl font-bold">Top 10 Trending Shows</h2>
             <ChevronRight className="text-cyan-400" />
