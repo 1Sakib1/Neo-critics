@@ -110,41 +110,7 @@ function App() {
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
 
-  const handleWatchLive = async (show) => {
-    if (!show.externals?.imdb) {
-      alert("Watch link not available for this show.");
-      return;
-    }
-    
-    try {
-      // Use public TMDB key to convert IMDB ID to TMDB ID exactly as Cinejoy expects
-      const res = await fetch(`https://api.themoviedb.org/3/find/${show.externals.imdb}?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&external_source=imdb_id`);
-      const data = await res.json();
-      
-      let tmdbId = null;
-      let type = 'tv';
 
-      if (data.tv_results && data.tv_results.length > 0) {
-        tmdbId = data.tv_results[0].id;
-        type = 'tv';
-      } else if (data.movie_results && data.movie_results.length > 0) {
-        tmdbId = data.movie_results[0].id;
-        type = 'movie';
-      }
-
-      if (tmdbId) {
-        const slug = show.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase();
-        // TV shows use /tv/id-slug/watch, Movies use /movie/id-slug/watch
-        const cinejoyUrl = `https://cinejoy.pro/${type}/${tmdbId}-${slug}/watch`;
-        window.open(cinejoyUrl, '_blank');
-      } else {
-        alert("Watch link not found in database.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Failed to locate live stream.");
-    }
-  };
 
   if (loading) {
     return (
@@ -219,10 +185,10 @@ function App() {
 
               <div className="flex gap-4 pt-4">
                 <button 
-                  onClick={() => handleWatchLive(heroShow)}
+                  onClick={() => setSelectedShow({ ...heroShow, isPlaying: true })}
                   className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105 shadow-lg shadow-cyan-500/30"
                 >
-                  <PlayCircle size={20} /> Watch on Cinejoy
+                  <PlayCircle size={20} /> Watch Now in HD
                 </button>
                 <button 
                   onClick={() => setSelectedShow(heroShow)}
@@ -398,44 +364,58 @@ function App() {
 
       {/* Modal */}
       {selectedShow && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedShow(null)}>
-          <div className="bg-[#111] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative flex flex-col md:flex-row shadow-2xl shadow-cyan-500/10" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" onClick={() => setSelectedShow(null)}>
+          <div className={`bg-[#0a0a0a] border border-white/10 rounded-2xl w-full ${selectedShow.isPlaying ? 'max-w-6xl aspect-video' : 'max-w-4xl max-h-[90vh]'} overflow-hidden relative flex flex-col md:flex-row shadow-2xl shadow-cyan-500/20`} onClick={e => e.stopPropagation()}>
             <button 
               onClick={() => setSelectedShow(null)}
-              className="absolute top-4 right-4 bg-black/50 p-2 rounded-full text-white hover:text-cyan-400 transition z-10"
+              className="absolute top-4 right-4 bg-black/50 hover:bg-red-500 p-2 rounded-full text-white transition z-50"
             >
               <X size={24} />
             </button>
-            <div className="w-full md:w-2/5">
-              <img src={selectedShow.image?.original || selectedShow.image?.medium} alt={selectedShow.name} className="w-full h-full object-cover" />
-            </div>
-            <div className="p-8 md:w-3/5 flex flex-col">
-              <h2 className="text-4xl font-black mb-2">{selectedShow.name}</h2>
-              <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6 flex-wrap items-center">
-                <OmdbBadges imdbId={selectedShow.externals?.imdb} />
-                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.premiered || 'TBD'}</span>
-                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.status}</span>
-                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.network?.name || selectedShow.webChannel?.name || 'Unknown Network'}</span>
+
+            {selectedShow.isPlaying ? (
+              <div className="w-full h-full bg-black">
+                <iframe
+                  src={`https://vidsrc.to/embed/tv/${selectedShow.externals?.imdb}`}
+                  className="w-full h-full border-0"
+                  allowFullScreen
+                  title="Live Stream Player"
+                ></iframe>
               </div>
-              <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary || 'No summary available.' }} />
-              
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => handleWatchLive(selectedShow)} 
-                  className="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1 flex justify-center items-center gap-2 shadow-lg shadow-cyan-500/20"
-                >
-                  <PlayCircle size={18} /> Watch Live (Cinejoy)
-                </button>
-                {selectedShow.officialSite && (
-                  <a href={selectedShow.officialSite} target="_blank" rel="noreferrer" className="bg-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/20 transition text-center flex-1">
-                    Official Site
-                  </a>
-                )}
-                <a href={selectedShow.url} target="_blank" rel="noreferrer" className="bg-white/5 border border-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/10 transition text-center flex-1">
-                  TVMaze Info
-                </a>
-              </div>
-            </div>
+            ) : (
+              <>
+                <div className="w-full md:w-2/5 relative group cursor-pointer" onClick={() => setSelectedShow({ ...selectedShow, isPlaying: true })}>
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/10 transition duration-300 z-10 flex items-center justify-center">
+                    <PlayCircle size={64} className="text-white opacity-80 group-hover:scale-110 group-hover:opacity-100 group-hover:text-cyan-400 transition duration-300" />
+                  </div>
+                  <img src={selectedShow.image?.original || selectedShow.image?.medium} alt={selectedShow.name} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-8 md:w-3/5 flex flex-col overflow-y-auto">
+                  <h2 className="text-4xl font-black mb-2">{selectedShow.name}</h2>
+                  <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6 flex-wrap items-center">
+                    <OmdbBadges imdbId={selectedShow.externals?.imdb} />
+                    <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.premiered || 'TBD'}</span>
+                    <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.status}</span>
+                    <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.network?.name || selectedShow.webChannel?.name || 'Unknown Network'}</span>
+                  </div>
+                  <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary || 'No summary available.' }} />
+                  
+                  <div className="flex gap-4 mt-auto">
+                    <button 
+                      onClick={() => setSelectedShow({ ...selectedShow, isPlaying: true })} 
+                      className="bg-cyan-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1 flex justify-center items-center gap-2 shadow-lg shadow-cyan-500/20"
+                    >
+                      <PlayCircle size={20} /> Watch Now in HD
+                    </button>
+                    {selectedShow.officialSite && (
+                      <a href={selectedShow.officialSite} target="_blank" rel="noreferrer" className="bg-white/10 text-white px-6 py-3 rounded-lg font-bold hover:bg-white/20 transition text-center flex-1 flex justify-center items-center">
+                        Official Site
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
