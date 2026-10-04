@@ -57,6 +57,12 @@ const normalizeTmdb = (item) => ({
   tmdbId: item.id
 });
 
+const getCinejoyLink = (show) => {
+  if (!show) return '#';
+  const slug = show.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  return `https://cinejoy.pro/${show.type}/${show.tmdbId}-${slug}/watch`;
+};
+
 function App() {
   const [shows, setShows] = useState([])
   const [loading, setLoading] = useState(true)
@@ -166,7 +172,7 @@ function App() {
       </nav>
 
       {/* Hero Section Slideshow (Hide during search) */}
-      !{!isSearching && heroShow && (
+      {!isSearching && heroShow && (
         <section className="relative pt-24 pb-12 px-6 lg:pt-32 lg:pb-20 min-h-[85vh] flex flex-col lg:flex-row gap-12 items-center max-w-7xl mx-auto">
           {/* Dynamic Background Image */}
           <div className="absolute inset-0 z-[-1] opacity-20">
@@ -198,12 +204,14 @@ function App() {
             />
 
             <div className="flex gap-4 pt-4">
-              <button 
-                onClick={() => setSelectedShow({ ...heroShow, isPlaying: true })}
+              <a 
+                href={getCinejoyLink(heroShow)}
+                target="_blank"
+                rel="noreferrer"
                 className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105 shadow-lg shadow-cyan-500/30"
               >
-                <PlayCircle size={20} /> Watch Now in HD
-              </button>
+                <PlayCircle size={20} /> Watch on Cinejoy
+              </a>
               <button 
                 onClick={() => setSelectedShow(heroShow)}
                 className="bg-white/5 border border-white/10 px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-white/10 transition"
@@ -236,7 +244,7 @@ function App() {
       )}
 
       {/* Top Rated Sidebar / Row (Hide during search) */}
-      !{!isSearching && (
+      {!isSearching && (
         <section className="px-6 max-w-7xl mx-auto -mt-10 relative z-20">
           <h2 className="text-xl font-bold mb-6 flex items-center gap-2 uppercase tracking-widest text-gray-400">
             <Star className="text-yellow-500" size={20} /> Top Trending Now
@@ -356,12 +364,14 @@ function App() {
                   <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary || 'No summary available.' }} />
                   
                   <div className="flex gap-4 mt-auto">
-                    <button 
-                      onClick={() => setSelectedShow({ ...selectedShow, isPlaying: true })} 
+                    <a 
+                      href={getCinejoyLink(selectedShow)}
+                      target="_blank"
+                      rel="noreferrer"
                       className="bg-cyan-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1 flex justify-center items-center gap-2 shadow-lg shadow-cyan-500/20"
                     >
-                      <PlayCircle size={20} /> Watch Now In HD
-                    </button>
+                      <PlayCircle size={20} /> Watch on Cinejoy
+                    </a>
                   </div>
                 </div>
               </>
