@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X, Award, Tv } from 'lucide-react'
+﻿import { useState, useEffect } from 'react'
+import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X, Award, Tv, ChevronRight } from 'lucide-react'
 import './App.css'
 
 function App() {
@@ -39,9 +39,10 @@ function App() {
   );
 
   const heroShow = shows[0];
-  const marqueeShows = shows.slice(1, 20); // For scrolling titles
-  const topRatedShows = shows.slice(20, 24); // For a new section
-  const gridShows = searchQuery ? filteredShows : shows.slice(24, 40);
+  const top10Shows = shows.slice(1, 11); // For the Top 10 Slideshow
+  const marqueeShows = shows.slice(11, 30); // For scrolling titles
+  const topRatedShows = shows.slice(30, 34); // For the critically acclaimed grid
+  const gridShows = searchQuery ? filteredShows : shows.slice(34, 54);
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/30 pb-10">
@@ -116,12 +117,54 @@ function App() {
         </main>
       )}
 
+      {/* Top 10 Trending Slideshow (Netflix Style) */}
+      {!searchQuery && (
+        <section className="mt-20 pl-6 md:pl-12 lg:pl-0 max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-2 px-6 lg:px-0">
+            <h2 className="text-2xl font-bold">Top 10 Trending Shows</h2>
+            <ChevronRight className="text-cyan-400" />
+          </div>
+          
+          <div className="flex gap-6 overflow-x-auto hide-scrollbar snap-x snap-mandatory py-8 px-6 lg:px-0">
+            {top10Shows.map((show, idx) => (
+              <div 
+                key={"top10-" + show.id}
+                onClick={() => setSelectedShow(show)}
+                className="relative flex-shrink-0 w-[240px] md:w-[280px] snap-start cursor-pointer group flex items-end pr-4"
+              >
+                {/* Netflix Style Large Number */}
+                <div 
+                  className="text-[120px] leading-none font-black text-[#050505] tracking-tighter z-10 -mr-8 -mb-4 select-none group-hover:scale-110 transition duration-500" 
+                  style={{ WebkitTextStroke: '3px rgba(255,255,255,0.8)' }}
+                >
+                  {idx + 1}
+                </div>
+                
+                {/* Image Card */}
+                <div className="relative w-40 md:w-48 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl z-0 bg-white/5 border border-white/10">
+                  <img 
+                    src={show.image?.medium} 
+                    alt={show.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 group-hover:opacity-60 transition duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-4">
+                    <h3 className="font-bold text-white text-sm leading-tight mb-1">{show.name}</h3>
+                    <span className="text-yellow-500 text-xs font-bold flex items-center gap-1">
+                      <Star size={12} fill="currentColor"/>{show.rating?.average}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Scrolling Titles (Marquee) */}
       {!searchQuery && (
-        <section className="mt-20 border-y border-white/5 bg-white/5 py-6 overflow-hidden">
+        <section className="mt-10 border-y border-white/5 bg-white/5 py-6 overflow-hidden">
           <div className="marquee-container">
             <div className="marquee-content flex items-center gap-12 px-6">
-              {/* Double the array for seamless infinite scroll */}
               {[...marqueeShows, ...marqueeShows].map((show, i) => (
                 <div key={"marquee-" + show.id + "-" + i} className="flex items-center gap-4 flex-shrink-0 cursor-pointer hover:text-cyan-400 transition" onClick={() => setSelectedShow(show)}>
                   <h3 className="text-xl font-bold tracking-wide uppercase whitespace-nowrap">{show.name}</h3>
