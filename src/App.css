@@ -1,3 +1,43 @@
-body {
+﻿body {
     background-color: #050505;
+}
+
+/* Marquee Scrolling CSS */
+.marquee-container {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+.marquee-container::before,
+.marquee-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+.marquee-container::before {
+    left: 0;
+    background: linear-gradient(to right, #050505 0%, transparent 100%);
+}
+.marquee-container::after {
+    right: 0;
+    background: linear-gradient(to left, #050505 0%, transparent 100%);
+}
+
+.marquee-content {
+    display: flex;
+    min-width: 200%;
+    animation: marquee 30s linear infinite;
+}
+.marquee-content:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }

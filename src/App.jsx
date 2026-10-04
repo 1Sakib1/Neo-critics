@@ -1,5 +1,5 @@
-﻿import { useState, useEffect } from 'react'
-import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X, Award, Tv } from 'lucide-react'
 import './App.css'
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
       .then(data => {
         const topContent = data
           .filter(item => item.image && item.image.original && item.rating && item.rating.average)
-          .sort((a, b) => b.rating.average - a.rating.average)
+          .sort((a, b) => b.rating.average - a.rating.average);
         setShows(topContent);
         setLoading(false);
       })
@@ -33,17 +33,18 @@ function App() {
     )
   }
 
-  // Filter shows based on search
   const filteredShows = shows.filter(show => 
     show.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     (show.genres && show.genres.some(g => g.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
   const heroShow = shows[0];
-  const gridShows = searchQuery ? filteredShows : shows.slice(1, 13); // Show 12 cards max unless searching
+  const marqueeShows = shows.slice(1, 20); // For scrolling titles
+  const topRatedShows = shows.slice(20, 24); // For a new section
+  const gridShows = searchQuery ? filteredShows : shows.slice(24, 40);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/30 pb-20">
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-cyan-500/30 pb-10">
       {/* Navbar */}
       <nav className="fixed w-full top-0 z-50 bg-[#050505]/90 backdrop-blur-md border-b border-white/10 px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2 text-2xl font-bold cursor-pointer" onClick={() => {setSearchQuery(''); window.scrollTo(0,0);}}>
@@ -63,11 +64,12 @@ function App() {
         </div>
 
         <div className="hidden md:flex gap-6 text-sm font-semibold tracking-wider text-gray-400">
+          <a href="#" className="hover:text-cyan-400 transition">DISCOVER</a>
           <a href="#" className="hover:text-cyan-400 transition">LIVE FEED</a>
         </div>
       </nav>
 
-      {/* Hero Section (Only show if not searching) */}
+      {/* Hero Section */}
       {!searchQuery && heroShow && (
         <main className="pt-32 px-6 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6 z-10">
@@ -114,14 +116,59 @@ function App() {
         </main>
       )}
 
+      {/* Scrolling Titles (Marquee) */}
+      {!searchQuery && (
+        <section className="mt-20 border-y border-white/5 bg-white/5 py-6 overflow-hidden">
+          <div className="marquee-container">
+            <div className="marquee-content flex items-center gap-12 px-6">
+              {/* Double the array for seamless infinite scroll */}
+              {[...marqueeShows, ...marqueeShows].map((show, i) => (
+                <div key={"marquee-" + show.id + "-" + i} className="flex items-center gap-4 flex-shrink-0 cursor-pointer hover:text-cyan-400 transition" onClick={() => setSelectedShow(show)}>
+                  <h3 className="text-xl font-bold tracking-wide uppercase whitespace-nowrap">{show.name}</h3>
+                  <span className="flex items-center gap-1 text-yellow-500 text-sm font-bold"><Star size={14} fill="currentColor"/> {show.rating.average}</span>
+                  <span className="text-white/20 ml-8 text-2xl">•</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Top Rated Highlights */}
+      {!searchQuery && (
+        <section className="mt-20 px-6 max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-8">
+            <Award className="text-yellow-500" size={32} />
+            <h2 className="text-3xl font-bold">Critically Acclaimed</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {topRatedShows.map(show => (
+              <div key={show.id} onClick={() => setSelectedShow(show)} className="flex bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition cursor-pointer">
+                <img src={show.image?.medium} alt={show.name} className="w-1/3 object-cover" />
+                <div className="p-6 flex-1 flex flex-col justify-center">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+                      <Star size={12} fill="currentColor"/> {show.rating?.average}
+                    </span>
+                    <span className="text-gray-500 text-xs font-bold uppercase">{show.genres[0]}</span>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-cyan-400 transition">{show.name}</h3>
+                  <p className="text-sm text-gray-400 line-clamp-3" dangerouslySetInnerHTML={{ __html: show.summary }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Grid Section */}
       <section className="mt-20 px-6 max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <TrendingUp className="text-rose-500" size={32} />
-            <h2 className="text-3xl font-bold">{searchQuery ? 'Search Results' : 'Live Content Feed'}</h2>
+            <Tv className="text-cyan-400" size={32} />
+            <h2 className="text-3xl font-bold">{searchQuery ? 'Search Results' : 'Discover More'}</h2>
           </div>
-          {searchQuery && <span className="text-cyan-400">{filteredShows.length} found</span>}
+          {searchQuery && <span className="text-cyan-400 font-bold bg-cyan-400/10 px-3 py-1 rounded-full">{filteredShows.length} FOUND</span>}
         </div>
         
         {filteredShows.length === 0 ? (
@@ -154,10 +201,22 @@ function App() {
         )}
       </section>
 
+      {/* Footer */}
+      <footer className="mt-32 border-t border-white/10 pt-10 pb-6 text-center text-gray-500">
+        <div className="flex items-center justify-center gap-2 text-2xl font-bold mb-4 opacity-50">
+          <Film className="text-cyan-400" />
+          <span className="text-white">Neo<span className="text-cyan-400 font-light">Critics</span></span>
+        </div>
+        <p className="text-sm max-w-md mx-auto mb-6">Your ultimate guide to honest, live, and dynamic entertainment reviews, powered by the TVMaze API.</p>
+        <div className="text-xs font-bold tracking-widest text-white/20">
+          © 2026 NEO CRITICS • ENGINEERED WITH REACT
+        </div>
+      </footer>
+
       {/* Modal */}
       {selectedShow && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#111] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative flex flex-col md:flex-row shadow-2xl shadow-cyan-500/10">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedShow(null)}>
+          <div className="bg-[#111] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative flex flex-col md:flex-row shadow-2xl shadow-cyan-500/10" onClick={e => e.stopPropagation()}>
             <button 
               onClick={() => setSelectedShow(null)}
               className="absolute top-4 right-4 bg-black/50 p-2 rounded-full text-white hover:text-cyan-400 transition z-10"
@@ -169,10 +228,11 @@ function App() {
             </div>
             <div className="p-8 md:w-3/5 flex flex-col">
               <h2 className="text-4xl font-black mb-2">{selectedShow.name}</h2>
-              <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6">
+              <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6 flex-wrap">
                 <span className="flex items-center gap-1 text-yellow-500"><Star size={16}/> {selectedShow.rating?.average}</span>
-                <span>{selectedShow.premiered}</span>
-                <span>{selectedShow.status}</span>
+                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.premiered}</span>
+                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.status}</span>
+                <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.network?.name || selectedShow.webChannel?.name || 'Unknown Network'}</span>
               </div>
               <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary }} />
               
@@ -195,4 +255,3 @@ function App() {
 }
 
 export default App
-
