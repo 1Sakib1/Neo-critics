@@ -73,11 +73,11 @@ function App() {
   const [isSearching, setIsSearching] = useState(false)
   const [searchLoading, setSearchLoading] = useState(false)
   
-  const [heroIndex, setHeroIndex] = useState(0)
+  const [heroIndex, setHeroIndex] = useState(Math.floor(Math.random() * 5))
 
   // 1. Fetch TMDB Trending Data
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_KEY}`)
+    fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${TMDB_KEY}`)
       .then(res => res.json())
       .then(data => {
         const validItems = data.results
