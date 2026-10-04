@@ -182,9 +182,17 @@ function App() {
               </div>
 
               <div className="flex gap-4 pt-4">
+                <a 
+                  href={`https://cinejoy.pro/search/${heroShow.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105 shadow-lg shadow-cyan-500/30"
+                >
+                  <PlayCircle size={20} /> Watch on Cinejoy
+                </a>
                 <button 
                   onClick={() => setSelectedShow(heroShow)}
-                  className="bg-cyan-400 text-black px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-cyan-300 transition hover:scale-105"
+                  className="bg-white/5 border border-white/10 px-8 py-3 rounded-lg font-bold flex items-center gap-2 hover:bg-white/10 transition"
                 >
                   <Info size={20} /> View Details
                 </button>
@@ -378,13 +386,21 @@ function App() {
               <div className="text-gray-300 leading-relaxed mb-8 flex-1" dangerouslySetInnerHTML={{ __html: selectedShow.summary || 'No summary available.' }} />
               
               <div className="flex gap-4">
+                <a 
+                  href={`https://cinejoy.pro/search/${selectedShow.name.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1 flex justify-center items-center gap-2 shadow-lg shadow-cyan-500/20"
+                >
+                  <PlayCircle size={18} /> Watch Live (Cinejoy)
+                </a>
                 {selectedShow.officialSite && (
-                  <a href={selectedShow.officialSite} target="_blank" rel="noreferrer" className="bg-cyan-400 text-black px-6 py-2 rounded-lg font-bold hover:bg-cyan-300 transition text-center flex-1">
+                  <a href={selectedShow.officialSite} target="_blank" rel="noreferrer" className="bg-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/20 transition text-center flex-1">
                     Official Site
                   </a>
                 )}
-                <a href={selectedShow.url} target="_blank" rel="noreferrer" className="bg-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/20 transition text-center flex-1">
-                  View on TVMaze
+                <a href={selectedShow.url} target="_blank" rel="noreferrer" className="bg-white/5 border border-white/10 text-white px-6 py-2 rounded-lg font-bold hover:bg-white/10 transition text-center flex-1">
+                  TVMaze Info
                 </a>
               </div>
             </div>
