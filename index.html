@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <script src="https://kit.fontawesome.com/c87f159387.js" crossorigin="anonymous"></script>
     <title>Neo Critics | Home</title>
   </head>
   <body>
@@ -15,7 +16,7 @@
         <div class="nav-links">
           <ul>
             <li>
-              <a href="/">Home</a>
+              <a href="/" class="active">Home</a>
             </li>
             <li><a href="#">About</a></li>
             <li><a href="#">FAQ</a></li>
@@ -25,14 +26,14 @@
         <div class="user-dp">
           <img
             src="https://plus.unsplash.com/premium_photo-1688891564708-9b2247085923?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmFuZG9tJTIwcGVyc29ufGVufDB8fDB8fHww"
-            alt="user dp"
+            alt="User Profile"
           />
         </div>
       </nav>
     </header>
 
     <section class="hero">
-      <img src="./bg/A1syReJnrtL.jpg" alt="poster" />
+      <img src="./bg/A1syReJnrtL.jpg" alt="Hero background poster" />
       <div class="wrapper">
         <div class="heroContainer">
           <h3>Your Guide To</h3>
@@ -52,104 +53,122 @@
         </div>
       </div>
     </section>
-    <section class="featured-section">
-      <div class="headline">
-        <h1>Featured Reviews</h1>
+
+    <main>
+      <section class="featured-section">
+        <div class="headline">
+          <h1>Featured Reviews</h1>
+        </div>
+        <div class="grid-wrapper">
+          <div class="card">
+            <div class="card-header">
+              <img
+                src="https://wherelifestarts.wordpress.com/wp-content/uploads/2018/07/sanju-poster-0673749001530266054.jpg"
+                alt="Sanju Movie Poster"
+              />
+            </div>
+            <div class="card-content">
+              <h1>Sanju</h1>
+              <p>By <span>Arnob</span> on <span>Thu 06 Feb 2025</span></p>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>1k Ratings</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNOuEAAryJSkaFZ82l8zPVCtlJA_RV80bx3w&s"
+                alt="Rockstar Movie Poster"
+              />
+            </div>
+            <div class="card-content">
+              <h1>Rockstar</h1>
+              <p>By <span>Afride Vaia</span> on <span>Thu 06 Feb 2025</span></p>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>1.2k Ratings</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ91BSpae_IQGkNjlSBknbuAiGMqtOV8pqPw&s"
+                alt="Barfi Movie Poster"
+              />
+            </div>
+            <div class="card-content">
+              <h1>Barfi</h1>
+              <p>By <span>Mahin</span> on <span>Thu 06 Feb 2025</span></p>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>980 Ratings</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="popular-section featured-section">
+        <div class="headline">
+          <h1>Popular Critics</h1>
+        </div>
+        <div class="grid-wrapper">
+          <div class="card critic-card">
+            <div class="card-header">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTysOZnaheInIjGLSITt6CRfGtCCCET8RFAZw&s"
+                alt="Ema Watson Profile"
+              />
+            </div>
+            <div class="card-content">
+              <h1>Ema Watson</h1>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>4.8</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="card critic-card">
+            <div class="card-header">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVNN58XFDLxdqtwwWRSE924NjtuSryXFGxjg&s"
+                alt="Emy Wills Profile"
+              />
+            </div>
+            <div class="card-content">
+              <h1>Emy Wills</h1>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>4.6</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="card critic-card">
+            <div class="card-header">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT33EzPkVVFGq7KO3XqQSUdtk3Ho2Ovl9sY_A&s"
+                alt="The Bull Profile"
+              />
+            </div>
+            <div class="card-content">
+              <h1>The Bull</h1>
+              <div class="rating">
+                <p><i class="fa-solid fa-star"></i> <span>4.9</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-content">
+        <h2>Neo Critics</h2>
+        <p>&copy; 2025 Neo Critics. All rights reserved.</p>
+        <div class="socials">
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
       </div>
-      <div class="grid-wrapper">
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://wherelifestarts.wordpress.com/wp-content/uploads/2018/07/sanju-poster-0673749001530266054.jpg"
-              alt="Sanju"
-            />
-          </div>
-          <div class="card-content">
-            <h1>Sanju</h1>
-            <p>By <span>Arnob</span> on <span>Thu 06 Feb 2025</span></p>
-            <p><i class="fa-regular fa-star"></i><span>1k</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNOuEAAryJSkaFZ82l8zPVCtlJA_RV80bx3w&s"
-              alt="Rockstar"
-            />
-          </div>
-          <div class="card-content">
-            <h1>Rockstar</h1>
-            <p>By <span>Afride Vaia</span> on <span>Thu 06 Feb 2025</span></p>
-            <p><i class="fa-regular fa-star"></i><span>1k</span></p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ91BSpae_IQGkNjlSBknbuAiGMqtOV8pqPw&s"
-              alt="Barfi"
-            />
-          </div>
-          <div class="card-content">
-            <h1>Barfi</h1>
-            <p>By <span>Mahin</span> on <span>Thu 06 Feb 2025</span></p>
-            <p><i class="fa-regular fa-star"></i><span>1k</span></p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <script src="https://kit.fontawesome.com/c87f159387.js"></script>
-
-    <section class="popular-section">
-      <div class="headline">
-        <h1>Popular Critics</h1>
-      </div>
-
-      <div class="grid-wrapper">
-        <!-- card 1 -->
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTysOZnaheInIjGLSITt6CRfGtCCCET8RFAZw&s"
-              alt=""
-            />
-          </div>
-
-          <div class="card-content">
-            <h1>Ema Watson</h1>
-            <p><i class="fa-regular fa-star"></i><span> 0</span></p>
-          </div>
-        </div>
-
-        <!-- card 2 -->
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVNN58XFDLxdqtwwWRSE924NjtuSryXFGxjg&s"
-              alt=""
-            />
-          </div>
-
-          <div class="card-content">
-            <h1>Emy Wills</h1>
-            <p><i class="fa-regular fa-star"></i><span> 0</span></p>
-          </div>
-        </div>
-
-        <!-- card 3 -->
-        <div class="card">
-          <div class="card-header">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT33EzPkVVFGq7KO3XqQSUdtk3Ho2Ovl9sY_A&s"
-              alt=""
-            />
-          </div>
-          <div class="card-content">
-            <h1>The Bull</h1>
-            <p><i class="fa-regular fa-star"></i><span> 0</span></p>
-          </div>
-        </div>
-      </div>
-    </section>
+    </footer>
   </body>
 </html>
