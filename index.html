@@ -1,88 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Critics | Next-Gen Movie Reviews</title>
-    <link rel="stylesheet" href="style.css?v=2.0">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/c87f159387.js" crossorigin="anonymous"></script>
-</head>
-<body>
-    <!-- Animated Background -->
-    <div class="blob-bg"></div>
-
-    <nav class="navbar" id="navbar">
-        <div class="logo">
-            <i class="fa-solid fa-film"></i> Neo<span>Critics</span>
-        </div>
-        <ul class="nav-links">
-            <li><a href="#home" class="active">Discover</a></li>
-            <li><a href="#trending">Trending</a></li>
-            <li><a href="#critics">Top Critics</a></li>
-        </ul>
-        <div class="nav-actions">
-            <button class="icon-btn"><i class="fa-solid fa-search"></i></button>
-            <div class="user-profile">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100" alt="User">
-            </div>
-        </div>
-    </nav>
-
-    <main>
-        <section id="home" class="hero">
-            <div class="hero-content fade-in">
-                <span class="badge">Featured Review</span>
-                <h1 class="glitch">DUNE: PART TWO</h1>
-                <p>A staggering visual masterpiece that redefines modern sci-fi cinema. Explore our critic consensus and dive deep into the sands of Arrakis.</p>
-                <div class="hero-actions">
-                    <button class="btn btn-primary"><i class="fa-solid fa-play"></i> Read Review</button>
-                    <button class="btn btn-secondary"><i class="fa-regular fa-bookmark"></i> Save</button>
-                </div>
-                <div class="rating-badge">
-                    <i class="fa-solid fa-star"></i> 4.9 <span class="muted">/ 5 (Top Critic Pick)</span>
-                </div>
-            </div>
-            <div class="hero-visual fade-in" style="transition-delay: 0.2s;">
-                <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&w=1000" alt="Cinematic Visual" class="main-poster">
-            </div>
-        </section>
-
-        <section id="trending" class="trending">
-            <div class="section-header fade-in">
-                <h2>Trending Now</h2>
-                <div class="controls">
-                    <button id="prevBtn"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button id="nextBtn"><i class="fa-solid fa-chevron-right"></i></button>
-                </div>
-            </div>
-            <div class="carousel-container fade-in">
-                <div class="carousel" id="carousel">
-                    <!-- JS injected cards -->
-                </div>
-            </div>
-        </section>
-
-        <section id="critics" class="critics-section">
-            <h2 class="fade-in">Voices You Trust</h2>
-            <div class="critics-grid" id="criticsGrid">
-                <!-- JS Injected -->
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="footer-content fade-in">
-            <div class="logo"><i class="fa-solid fa-film"></i> Neo<span>Critics</span></div>
-            <p>Engineered for the ultimate cinematic experience.</p>
-            <div class="socials">
-                <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#"><i class="fa-brands fa-github"></i></a>
-                <a href="#"><i class="fa-brands fa-discord"></i></a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

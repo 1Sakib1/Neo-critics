@@ -1,25 +1,16 @@
-# Neo Critics 🎬
+# React + Vite
 
-A modern, responsive, and visually engaging landing page for a movie review platform.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-🌐 **[Live Demo](https://1Sakib1.github.io/Neo-critics/)**
+Currently, two official plugins are available:
 
-## 🌟 Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- **Responsive Design**: Fluid grid layout that adapts seamlessly to desktop, tablet, and mobile screens.
-- **Modern UI/UX**: Includes glassmorphism effects, smooth hover transitions, and engaging CSS animations.
-- **Clean Architecture**: Built with semantic HTML5 and vanilla CSS3.
-- **Accessible Icons & Fonts**: Integrated with FontAwesome and Google Fonts (Montserrat).
+## React Compiler
 
-## 🛠️ Technologies Used
-- HTML5
-- CSS3 (Flexbox, CSS Grid)
-- FontAwesome Icons
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## 🚀 Getting Started
+## Expanding the Oxlint configuration
 
-To view or modify this project locally, clone the repository and open `index.html` in any web browser.
-
-```bash
-git clone https://github.com/1Sakib1/Neo-critics.git
-```
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
