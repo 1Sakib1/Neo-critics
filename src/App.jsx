@@ -2,6 +2,43 @@ import { useState, useEffect } from 'react'
 import { Film, Star, TrendingUp, PlayCircle, Loader2, Info, Search, X, Award, Tv, ChevronRight } from 'lucide-react'
 import './App.css'
 
+// Custom Component to fetch and display Real IMDb & Rotten Tomatoes data live!
+const OmdbBadges = ({ imdbId }) => {
+  const [data, setData] = useState(null);
+  
+  useEffect(() => {
+    if (!imdbId) return;
+    let mounted = true;
+    fetch(`https://www.omdbapi.com/?i=${imdbId}&apikey=thewdb`)
+      .then(r => r.json())
+      .then(d => {
+         if (mounted && d.Response === "True") setData(d);
+      })
+      .catch(e => console.error("OMDb Error", e));
+    return () => { mounted = false; };
+  }, [imdbId]);
+
+  if (!data) return null;
+
+  const rt = data.Ratings?.find(r => r.Source === 'Rotten Tomatoes')?.Value;
+  const imdb = data.imdbRating;
+
+  return (
+    <div className="flex items-center gap-3">
+      {imdb && imdb !== 'N/A' && (
+        <span className="flex items-center gap-1 bg-[#f5c518] text-black px-2 py-0.5 rounded text-sm font-bold shadow-lg shadow-yellow-500/20">
+          IMDb {imdb}
+        </span>
+      )}
+      {rt && rt !== 'N/A' && (
+        <span className="flex items-center gap-1 bg-[#fa320a] text-white px-2 py-0.5 rounded text-sm font-bold shadow-lg shadow-red-500/20">
+          🍅 {rt}
+        </span>
+      )}
+    </div>
+  )
+}
+
 function App() {
   const [shows, setShows] = useState([])
   const [loading, setLoading] = useState(true)
@@ -54,16 +91,13 @@ function App() {
     setIsSearching(true);
     setSearchLoading(true);
     
-    // Wait for the user to stop typing for 600ms before hitting the API
     const debounceTimer = setTimeout(() => {
-      // Actually hit the TVMaze Search API endpoint!
       fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(searchQuery)}`)
         .then(res => res.json())
         .then(data => {
-          // The search endpoint wraps results in { score, show } objects
           const results = data
             .map(item => item.show)
-            .filter(show => show.image); // Keep UI clean by only showing results with images
+            .filter(show => show.image); 
           setSearchResults(results);
           setSearchLoading(false);
         })
@@ -80,7 +114,7 @@ function App() {
     return (
       <div className="min-h-screen bg-[#050505] text-white flex flex-col items-center justify-center">
         <Loader2 className="animate-spin text-cyan-400 mb-4" size={48} />
-        <p className="text-gray-400 animate-pulse font-bold tracking-widest text-sm">FETCHING LIVE DATA FROM PUBLIC API...</p>
+        <p className="text-gray-400 animate-pulse font-bold tracking-widest text-sm">FETCHING LIVE DATA FROM PUBLIC APIS...</p>
       </div>
     )
   }
@@ -140,9 +174,7 @@ function App() {
               />
               
               <div className="flex items-center gap-4 text-sm font-bold text-gray-300">
-                <span className="flex items-center gap-1 text-yellow-500">
-                  <Star size={18} fill="currentColor" /> {heroShow.rating?.average || '?'} / 10
-                </span>
+                <OmdbBadges imdbId={heroShow.externals?.imdb} />
                 <span>|</span>
                 <span>{heroShow.genres.join(' • ')}</span>
                 <span>|</span>
@@ -212,9 +244,7 @@ function App() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-4">
                     <h3 className="font-bold text-white text-sm leading-tight mb-1">{show.name}</h3>
-                    <span className="text-yellow-500 text-xs font-bold flex items-center gap-1">
-                      <Star size={12} fill="currentColor"/>{show.rating?.average || '?'}
-                    </span>
+                    <OmdbBadges imdbId={show.externals?.imdb} />
                   </div>
                 </div>
               </div>
@@ -252,11 +282,8 @@ function App() {
               <div key={show.id} onClick={() => setSelectedShow(show)} className="flex bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/10 transition cursor-pointer">
                 <img src={show.image?.medium} alt={show.name} className="w-1/3 object-cover" />
                 <div className="p-6 flex-1 flex flex-col justify-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="bg-yellow-500/20 text-yellow-500 px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
-                      <Star size={12} fill="currentColor"/> {show.rating?.average || '?'}
-                    </span>
-                    <span className="text-gray-500 text-xs font-bold uppercase">{show.genres[0]}</span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <OmdbBadges imdbId={show.externals?.imdb} />
                   </div>
                   <h3 className="text-2xl font-bold mb-2 text-white group-hover:text-cyan-400 transition">{show.name}</h3>
                   <p className="text-sm text-gray-400 line-clamp-3" dangerouslySetInnerHTML={{ __html: show.summary }} />
@@ -321,7 +348,7 @@ function App() {
           <Film className="text-cyan-400" />
           <span className="text-white">Neo<span className="text-cyan-400 font-light">Critics</span></span>
         </div>
-        <p className="text-sm max-w-md mx-auto mb-6">Your ultimate guide to honest, live, and dynamic entertainment reviews, powered by the TVMaze API.</p>
+        <p className="text-sm max-w-md mx-auto mb-6">Your ultimate guide to honest, live, and dynamic entertainment reviews, powered by the TVMaze API and OMDb API.</p>
         <div className="text-xs font-bold tracking-widest text-white/20">
           © 2026 NEO CRITICS • ENGINEERED WITH REACT
         </div>
@@ -342,8 +369,8 @@ function App() {
             </div>
             <div className="p-8 md:w-3/5 flex flex-col">
               <h2 className="text-4xl font-black mb-2">{selectedShow.name}</h2>
-              <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6 flex-wrap">
-                <span className="flex items-center gap-1 text-yellow-500"><Star size={16}/> {selectedShow.rating?.average || 'N/A'}</span>
+              <div className="flex gap-4 text-sm font-bold text-gray-400 mb-6 flex-wrap items-center">
+                <OmdbBadges imdbId={selectedShow.externals?.imdb} />
                 <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.premiered || 'TBD'}</span>
                 <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.status}</span>
                 <span className="bg-white/10 px-2 py-0.5 rounded">{selectedShow.network?.name || selectedShow.webChannel?.name || 'Unknown Network'}</span>
